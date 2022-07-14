@@ -1,0 +1,1 @@
+Тестовое задание для https://intelogis.ru/
