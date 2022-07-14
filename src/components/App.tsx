@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import Map from './Map';
 
 function App() {
-  const [showMap, setShowMap] = useState(true);
+  const ref = useRef<any>(null);
+
+  function test() {
+    ref.current.setWaypoints([{ x: 55.826991 , y: 37.593999 }, { x: 55.789141, y: 37.781785 }]);
+  }
 
   return (
     <>
-      <div style={{ width: '400px', height: '400px' }}>
-        <Map />
-      </div>
       <div style={{ width: '800px', height: '800px' }}>
-        { showMap && <Map /> }
+        <Map ref={ref} />
       </div>
-
-      <div><button onClick={() => { setShowMap(!showMap); }}>Show/Hide</button></div>
+      <button onClick={test}>test</button>
     </>
   );
 }
