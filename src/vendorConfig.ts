@@ -1,5 +1,4 @@
-// TODO: временно так, чтобы не ругалось на отсутствующие тайпинги плагинов
-const L: any = require('leaflet');
+import L from 'leaflet';
 
 // leaflet
 
@@ -12,5 +11,3 @@ L.Marker.prototype.options.icon = L.icon({
   shadowRetinaUrl: '/leaflet-images/marker-shadow.png',
   iconAnchor: [ 25 / 2, 41 ]
 });
-
-export {};

@@ -1,11 +1,10 @@
-// TODO: временно так, чтобы не ругалось на отсутствующие тайпинги плагинов
-const L: any = require('leaflet');
+import L from 'leaflet';
 
 export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: string) {
   const leafletTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   const leafletTileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-  const mapWrapper: { map: any } = { map: null };
+  const mapWrapper: { map: L.Map | null } = { map: null };
 
   const contextMenu = createContextMenu(mapWrapper);
 
@@ -31,17 +30,17 @@ export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: stri
   };
 }
 
-function createContextMenu(mapWrapper: { map: any }) {
-  function centerMap (e: any) {
-    mapWrapper.map.panTo(e.latlng);
+function createContextMenu(mapWrapper: { map: L.Map | null }) {
+  function centerMap(e: any) {
+    mapWrapper.map?.panTo(e.latlng);
   }
   
-  function zoomIn (e: any) {
-    mapWrapper.map.zoomIn();
+  function zoomIn() {
+    mapWrapper.map?.zoomIn();
   }
   
-  function zoomOut (e: any) {
-    mapWrapper.map.zoomOut();
+  function zoomOut() {
+    mapWrapper.map?.zoomOut();
   }
 
   return {
@@ -65,7 +64,7 @@ function createContextMenu(mapWrapper: { map: any }) {
   };
 }
 
-function createRouting(map: any, graphhopperApiKey: string) {
+function createRouting(map: L.Map, graphhopperApiKey: string) {
   const routingControl = L.Routing.control({
     // Использую это, т.к. дефолтный OSRM demo сервер постоянно лежит
     router: new L.Routing.GraphHopper(graphhopperApiKey),

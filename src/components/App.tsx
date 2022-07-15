@@ -5,8 +5,13 @@ import { appConfig } from 'appConfig';
 function App() {
   const ref = useRef<MapImperativeHandle>(null);
 
-  function test() {
-    ref.current?.setWaypoints([{ x: 55.826991 , y: 37.593999 }, { x: 55.789141, y: 37.781785 }]);
+  async function test() {
+    await ref.current?.setWaypoints([
+      { latitude: 55.826991 , longitude: 37.593999 },
+      { latitude: 55.789141, longitude: 37.781785 }
+    ]);
+
+    alert('Путь готов');
   }
 
   return (

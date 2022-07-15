@@ -1,27 +1,32 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import L from 'leaflet';
 import LeafletMapContainer from 'components/LeafletMapContainer';
 import { createMap } from './leafletCreateMap';
 
-// TODO: временно так, чтобы не ругалось на отсутствующие тайпинги плагинов
-const L: any = require('leaflet');
+export interface Waypoint {
+  latitude: number;
+  longitude: number;
+}
 
 export interface MapProps {
   graphhopperApiKey: string;
 }
 
 export interface MapImperativeHandle {
-  setWaypoints: (waypoints: any) => void;
+  setWaypoints: (waypoints: Waypoint[]) => Promise<void>;
 }
 
 const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHandle>) => {
-  const leafletMapRef = useRef<any>(null);
-  const lefaletRoutingControlRef = useRef<any>(null);
+  const leafletMapRef = useRef<L.Map | null>(null);
+  const lefaletRoutingControlRef = useRef<L.Routing.Control | null>(null);
 
   useImperativeHandle(ref, () => ({
-    setWaypoints(waypoints: any) {
-      const newWaypoints = waypoints.map((val: any) => L.latLng(val.x, val.y));
+    setWaypoints(waypoints: Waypoint[]) {
+      const newWaypoints = waypoints.map(val => L.latLng(val.latitude, val.longitude));
 
-      lefaletRoutingControlRef.current.setWaypoints(newWaypoints);
+      lefaletRoutingControlRef.current?.setWaypoints(newWaypoints);
+
+      return Promise.resolve();
     }
   }));
 

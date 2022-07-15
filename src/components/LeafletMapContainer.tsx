@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
+import L from 'leaflet';
 
 export interface LeafletMapContainerProps {
-  createMap: (targetElement: HTMLDivElement) => any;
+  createMap: (targetElement: HTMLDivElement) => L.Map;
 }
 
 function LeafletMapContainer(props: LeafletMapContainerProps) {
@@ -11,9 +12,7 @@ function LeafletMapContainer(props: LeafletMapContainerProps) {
     const createdMap = props.createMap(mapRef.current!);
 
     return () => {
-      if (createdMap) {
-        createdMap?.remove();
-      }
+      createdMap.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.createMap]);
