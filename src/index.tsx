@@ -4,8 +4,8 @@ import App from 'components/App';
 
 import 'reset.scss'
 import 'vendorImports';
+import 'vendorOverrides.scss';
 import 'main.scss';
-
 import 'vendorConfig';
 
 const rootElement = (

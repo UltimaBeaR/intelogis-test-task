@@ -5,17 +5,18 @@ import { createMap } from './leafletCreateMap';
 
 import classes from './Map.module.scss';
 
-export interface Waypoint {
+export interface MapPosition {
   latitude: number;
   longitude: number;
 }
 
 export interface MapProps {
+  initialLocation?: MapPosition
   graphhopperApiKey: string;
 }
 
 export interface MapImperativeHandle {
-  setWaypoints: (waypoints: Waypoint[]) => Promise<void>;
+  setWaypoints: (waypoints: MapPosition[]) => Promise<void>;
 }
 
 const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHandle>) => {
@@ -35,7 +36,7 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
   }, [isLoading]);
 
   useImperativeHandle(ref, () => ({
-    setWaypoints(waypoints: Waypoint[]) {
+    setWaypoints(waypoints: MapPosition[]) {
       if (leafletMapRef.current == null || leafletRoutingControlRef.current == null || resolveResultForSetWaypointsRef.current !== null) {
         return Promise.reject();
       }
@@ -43,6 +44,7 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
       const routing = leafletRoutingControlRef.current;
 
       const newWaypoints = waypoints.map(val => L.latLng(val.latitude, val.longitude));
+      routing.setWaypoints([]);
       routing.setWaypoints(newWaypoints);
 
       return new Promise((resolve) => {
@@ -52,8 +54,11 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
   }));
 
   const createMapInternal = useCallback((targetElement: HTMLDivElement) => {
+    const initialLocation = props.initialLocation ?? { latitude: 0, longitude: 0 };
+
     const { map, routingControl } = createMap(
       targetElement,
+      L.latLng(initialLocation.latitude, initialLocation.longitude),
       props.graphhopperApiKey,
       () => { setIsLoading(true); },
       () => { setIsLoading(false); }

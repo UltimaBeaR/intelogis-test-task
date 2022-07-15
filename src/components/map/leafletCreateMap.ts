@@ -2,6 +2,7 @@ import L from 'leaflet';
 
 export function createMap(
   targetElement: HTMLDivElement,
+  initialLocation: L.LatLng,
   graphhopperApiKey: string,
   startRountingCallback: () => void,
   endRoutingCallback: (isSuccess: boolean) => void
@@ -18,7 +19,7 @@ export function createMap(
     contextmenuWidth: contextMenu.width,
     contextmenuItems: contextMenu.items,
 
-    center: [49.8419, 24.0315],
+    center: [initialLocation.lat, initialLocation.lng],
     zoom: 16,
     layers: [
       L.tileLayer(leafletTileUrl, {
@@ -84,6 +85,7 @@ function createRouting(
     routeWhileDragging: false,
     showAlternatives: false,
     show: false,
+    fitSelectedRoutes: true,
   });
 
   routingControl.on('routingstart', () => {
