@@ -1,38 +1,18 @@
 // TODO: временно так, чтобы не ругалось на отсутствующие тайпинги плагинов
 const L: any = require('leaflet');
 
-const leafletTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const leafletTileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
 export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: string) {
-  let map: any = null;
-  let routingControl: any = null;
+  const leafletTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  const leafletTileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-  function centerMap (e: any) {
-    map.panTo(e.latlng);
-  }
-  
-  function zoomIn (e: any) {
-    map.zoomIn();
-  }
-  
-  function zoomOut (e: any) {
-    map.zoomOut();
-  }
+  const mapWrapper: { map: any } = { map: null };
 
-  map = L.map(targetElement, {
+  const contextMenu = createContextMenu(mapWrapper);
+
+  const map = mapWrapper.map = L.map(targetElement, {
     contextmenu: true,
-    contextmenuWidth: 140,
-    contextmenuItems: [{
-      text: 'Центрировать',
-      callback: centerMap
-    }, '-', {
-      text: 'Приблизить',
-      callback: zoomIn
-    }, {
-      text: 'Отдалить',
-      callback: zoomOut
-    }],
+    contextmenuWidth: contextMenu.width,
+    contextmenuItems: contextMenu.items,
 
     center: [49.8419, 24.0315],
     zoom: 16,
@@ -43,7 +23,50 @@ export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: stri
     ]
   });
 
-  routingControl = L.Routing.control({
+  const routingControl = createRouting(map, graphhopperApiKey);
+
+  return {
+    map,
+    routingControl
+  };
+}
+
+function createContextMenu(mapWrapper: { map: any }) {
+  function centerMap (e: any) {
+    mapWrapper.map.panTo(e.latlng);
+  }
+  
+  function zoomIn (e: any) {
+    mapWrapper.map.zoomIn();
+  }
+  
+  function zoomOut (e: any) {
+    mapWrapper.map.zoomOut();
+  }
+
+  return {
+    width: 140,
+
+    items: [
+      {
+        text: 'Центрировать',
+        callback: centerMap
+      },
+      '-',
+      {
+        text: 'Приблизить',
+        callback: zoomIn
+      },
+      {
+        text: 'Отдалить',
+        callback: zoomOut
+      }
+    ]
+  };
+}
+
+function createRouting(map: any, graphhopperApiKey: string) {
+  const routingControl = L.Routing.control({
     // Использую это, т.к. дефолтный OSRM demo сервер постоянно лежит
     router: new L.Routing.GraphHopper(graphhopperApiKey),
 
@@ -56,8 +79,5 @@ export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: stri
   
   routingControl.addTo(map);
 
-  return {
-    map,
-    routingControl
-  };
+  return routingControl;
 }
