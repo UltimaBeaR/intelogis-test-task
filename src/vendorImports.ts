@@ -12,3 +12,7 @@ import 'leaflet-contextmenu';
 
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet-routing-machine';
+
+// leaflet plugin routing machine - graphhopper integration
+
+import 'lrm-graphhopper';

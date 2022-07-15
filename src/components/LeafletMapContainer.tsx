@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-interface LeafletMapContainerProps {
+export interface LeafletMapContainerProps {
   createMap: (targetElement: HTMLDivElement) => any;
 }
 

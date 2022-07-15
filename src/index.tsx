@@ -6,6 +6,8 @@ import 'reset.scss'
 import 'vendorImports';
 import 'main.scss';
 
+import 'vendorConfig';
+
 const rootElement = (
   <React.StrictMode>
     <App />
