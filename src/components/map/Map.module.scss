@@ -1,0 +1,27 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+
+  transition: filter 1.0s ease;
+
+  &.loading {
+    filter: blur(2px) grayscale(60%);
+
+    pointer-events: none !important;
+    user-select: none !important;
+
+    * {
+      pointer-events: none !important;
+      user-select: none !important;
+    }
+  
+    &:focus {
+      outline: 0;
+    }
+  
+    *:focus {
+      outline: 0;
+    }
+  }
+}
+

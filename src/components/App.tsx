@@ -11,7 +11,7 @@ function App() {
       { latitude: 55.789141, longitude: 37.781785 }
     ]);
 
-    alert('Путь готов');
+    //alert('Путь готов');
   }
 
   return (

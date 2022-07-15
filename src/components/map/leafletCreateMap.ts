@@ -1,6 +1,11 @@
 import L from 'leaflet';
 
-export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: string) {
+export function createMap(
+  targetElement: HTMLDivElement,
+  graphhopperApiKey: string,
+  startRountingCallback: () => void,
+  endRoutingCallback: (isSuccess: boolean) => void
+) {
   const leafletTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   const leafletTileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
@@ -22,7 +27,7 @@ export function createMap(targetElement: HTMLDivElement, graphhopperApiKey: stri
     ]
   });
 
-  const routingControl = createRouting(map, graphhopperApiKey);
+  const routingControl = createRouting(map, graphhopperApiKey, startRountingCallback, endRoutingCallback);
 
   return {
     map,
@@ -64,7 +69,12 @@ function createContextMenu(mapWrapper: { map: L.Map | null }) {
   };
 }
 
-function createRouting(map: L.Map, graphhopperApiKey: string) {
+function createRouting(
+  map: L.Map,
+  graphhopperApiKey: string,
+  startRountingCallback: () => void,
+  endRoutingCallback: (isSuccess: boolean) => void
+) {
   const routingControl = L.Routing.control({
     // Использую это, т.к. дефолтный OSRM demo сервер постоянно лежит
     router: new L.Routing.GraphHopper(graphhopperApiKey),
@@ -74,6 +84,18 @@ function createRouting(map: L.Map, graphhopperApiKey: string) {
     routeWhileDragging: false,
     showAlternatives: false,
     show: false,
+  });
+
+  routingControl.on('routingstart', () => {
+    startRountingCallback();
+  });
+
+  routingControl.on('routesfound', () => {
+    endRoutingCallback(true);
+  });
+
+  routingControl.on('routingerror', () => {
+    endRoutingCallback(false);
   });
   
   routingControl.addTo(map);
