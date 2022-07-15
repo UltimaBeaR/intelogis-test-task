@@ -5,6 +5,8 @@ export interface LeafletMapContainerProps {
   // note: лучше использовать useCallback извне для этой функции,
   // чтобы карты не пересоздавались каждый раз когда идет ре-рендер внешнего компонента, задающего эту функцию
   createMap: (targetElement: HTMLDivElement) => L.Map;
+
+  autoInvalidateSize?: boolean;
 }
 
 function LeafletMapContainer(props: LeafletMapContainerProps) {
@@ -13,11 +15,17 @@ function LeafletMapContainer(props: LeafletMapContainerProps) {
   useEffect(() => {
     const createdMap = props.createMap(mapTargetElementRef.current!);
 
+    if (props.autoInvalidateSize ?? true) {
+      setInterval(function () {
+        createdMap.invalidateSize({ pan: false });
+      }, 500);
+    }
+
     return () => {
       createdMap.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.createMap]);
+  }, [props.createMap, props.autoInvalidateSize]);
 
   return (
     <div ref={mapTargetElementRef} style={{ width: '100%', height: '100%' }} />

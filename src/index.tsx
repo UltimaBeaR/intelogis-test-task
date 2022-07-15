@@ -5,8 +5,9 @@ import App from 'components/App';
 import 'reset.scss'
 import 'vendorImports';
 import 'vendorOverrides.scss';
-import 'main.scss';
 import 'vendorConfig';
+import 'main.scss';
+import 'react-split.scss';
 
 const rootElement = (
   <React.StrictMode>

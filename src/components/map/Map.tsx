@@ -68,6 +68,7 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
     leafletRoutingControlRef.current = routingControl;
 
     return map;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ props.graphhopperApiKey ]);
 
   return (

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import Split from 'react-split'
 import Map, { MapImperativeHandle } from './map/Map';
 import { appConfig } from 'appConfig';
 
@@ -20,16 +21,21 @@ function App() {
     setIsLoading(false);
   }
 
-  const tableWidth = 800;
-
   return (
     <main className={classes.main}>
-      <div className={classes['shipping-table']} style={{ width: `${tableWidth}px` }}>
-        <button disabled={isLoading} onClick={test}>test</button>
-      </div>
-      <div className={classes['map']} style={{ width: `calc(100% - ${tableWidth}px)` }}>
-        <Map ref={ref} initialLocation={{ latitude: 55.819720, longitude: 37.611699  }} graphhopperApiKey={appConfig.graphhopperApiKey} />
-      </div>
+      <Split
+        className="split"
+        minSize={150}
+        gutterSize={20}
+        snapOffset={0}
+      >
+        <div className={classes['shipping-table']}>
+          <button disabled={isLoading} onClick={test}>test</button>
+        </div>
+        <div className={classes['map']}>
+          <Map ref={ref} initialLocation={{ latitude: 55.819720, longitude: 37.611699 }} graphhopperApiKey={appConfig.graphhopperApiKey} />
+        </div>
+      </Split>
     </main>
   );
 }
