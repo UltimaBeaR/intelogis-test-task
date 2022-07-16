@@ -16,3 +16,7 @@ import 'leaflet-routing-machine';
 // leaflet plugin routing machine - graphhopper integration
 
 import 'lrm-graphhopper';
+
+// ant design
+
+import 'antd/dist/antd.css';

@@ -10,8 +10,14 @@ export interface MapPosition {
   longitude: number;
 }
 
+export type MarkerColor = 'black' | 'blue' | 'gold' | 'green' | 'grey' | 'orange' | 'red' | 'violet' | 'yellow';
+
 export interface MapProps {
-  initialLocation?: MapPosition
+  initialLocation?: MapPosition;
+  initialZoom?: number;
+  startWaypointMarkerColor?: MarkerColor;
+  endWaypointMarkerColor?: MarkerColor;
+  intermediateWaypointMarkerColor?: MarkerColor;
   graphhopperApiKey: string;
 }
 
@@ -55,10 +61,19 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
 
   const createMapInternal = useCallback((targetElement: HTMLDivElement) => {
     const initialLocation = props.initialLocation ?? { latitude: 0, longitude: 0 };
+    const initialZoom = props.initialZoom ?? 16;
+
+    const startWaypointMarkerColor = props.startWaypointMarkerColor ?? 'blue';
+    const endWaypointMarkerColor = props.endWaypointMarkerColor ?? 'blue';
+    const intermediateWaypointMarkerColor = props.intermediateWaypointMarkerColor ?? 'blue';
 
     const { map, routingControl } = createMap(
       targetElement,
       L.latLng(initialLocation.latitude, initialLocation.longitude),
+      initialZoom,
+      startWaypointMarkerColor,
+      endWaypointMarkerColor,
+      intermediateWaypointMarkerColor,
       props.graphhopperApiKey,
       () => { setIsLoading(true); },
       () => { setIsLoading(false); }
@@ -68,8 +83,8 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
     leafletRoutingControlRef.current = routingControl;
 
     return map;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ props.graphhopperApiKey ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.graphhopperApiKey]);
 
   return (
     <div className={`${classes.wrapper} ${isLoading ? classes.loading : ''}`}>

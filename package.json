@@ -8,6 +8,8 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "ant-design/icons": "4.7.0",
+    "antd": "4.21.6",
     "leaflet": "1.8.0",
     "leaflet-contextmenu": "1.4.0",
     "leaflet-routing-machine": "3.2.12",

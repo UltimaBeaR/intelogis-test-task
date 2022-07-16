@@ -17,7 +17,9 @@ declare module 'leaflet' {
 
     interface RoutingControlOptions {
       // В тайпингах плагина leaflet-routing-machine почему-то не добавили это
+      
       draggableWaypoints?: boolean;
+      createMarker?: (i: number, wp: Waypoint, n: number) => any;
     }
 
     // Плагин lrm-graphhopper
