@@ -1,9 +1,8 @@
 import { useRef, useState } from 'react';
 import Split from 'react-split';
-import { DingtalkOutlined } from '@ant-design/icons';
+import ShippingList from './ShippingList';
 import Map, { MapImperativeHandle } from './map/Map';
 import { appConfig } from 'appConfig';
-
 import { locations } from 'initialData/locations';
 
 import classes from './App.module.scss';
@@ -57,10 +56,10 @@ function App() {
         gutterSize={20}
         snapOffset={0}
       >
-        <div className={classes['shipping-table']}>
-          <button disabled={isLoading} onClick={test}><DingtalkOutlined />&nbsp;test&nbsp;</button>
-          <div>
-            {routeInfo.from} - {routeInfo.to}
+        <div className={classes['left']}>
+          <h1>Заявки на погрузку/разгрузку <button onClick={test}>test</button></h1>
+          <div className={classes['shipping-list']}>
+            <ShippingList />
           </div>
         </div>
         <div className={classes['map']}>
@@ -69,6 +68,8 @@ function App() {
             initialLocation={{ latitude: 55.819720, longitude: 37.611699 }}
             initialZoom={9}
             endWaypointMarkerColor='green'
+            startWaypointMarkerText='Погрузка'
+            endWaypointMarkerText='Разгрузка'
             graphhopperApiKey={appConfig.graphhopperApiKey}
           />
         </div>

@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import L from 'leaflet';
-import LeafletMapContainer from 'components/LeafletMapContainer';
-import { createMap } from './leafletCreateMap';
+import LeafletMapContainer from 'components/utility/LeafletMapContainer';
+import createMap from './createMap';
 
 import classes from './Map.module.scss';
 
@@ -17,7 +17,8 @@ export interface MapProps {
   initialZoom?: number;
   startWaypointMarkerColor?: MarkerColor;
   endWaypointMarkerColor?: MarkerColor;
-  intermediateWaypointMarkerColor?: MarkerColor;
+  startWaypointMarkerText?: string,
+  endWaypointMarkerText?: string,
   graphhopperApiKey: string;
 }
 
@@ -65,7 +66,9 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
 
     const startWaypointMarkerColor = props.startWaypointMarkerColor ?? 'blue';
     const endWaypointMarkerColor = props.endWaypointMarkerColor ?? 'blue';
-    const intermediateWaypointMarkerColor = props.intermediateWaypointMarkerColor ?? 'blue';
+  
+    const startWaypointMarkerText = props.startWaypointMarkerText ?? 'Начальная точка';
+    const endWaypointMarkerText = props.endWaypointMarkerText ?? 'Конечная точка';
 
     const { map, routingControl } = createMap(
       targetElement,
@@ -73,7 +76,10 @@ const Map = forwardRef((props: MapProps, ref: React.ForwardedRef<MapImperativeHa
       initialZoom,
       startWaypointMarkerColor,
       endWaypointMarkerColor,
-      intermediateWaypointMarkerColor,
+      'blue',
+      startWaypointMarkerText,
+      endWaypointMarkerText,
+      'Промежуточная точка',
       props.graphhopperApiKey,
       () => { setIsLoading(true); },
       () => { setIsLoading(false); }

@@ -2,13 +2,20 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 
 export interface LeafletMapContainerProps {
-  // note: лучше использовать useCallback извне для этой функции,
-  // чтобы карты не пересоздавались каждый раз когда идет ре-рендер внешнего компонента, задающего эту функцию
+  /**
+   * Функция для создания и настройки карты через leaflet
+   * 
+   * note: лучше использовать useCallback извне для этой функции,
+   * чтобы карты не пересоздавались каждый раз когда идет ре-рендер внешнего компонента, задающего эту функцию
+   */
   createMap: (targetElement: HTMLDivElement) => L.Map;
 
   autoInvalidateSize?: boolean;
 }
 
+/**
+ * Простой контейнер для leaflet карты. Подстраивается под размер родителя
+ */
 function LeafletMapContainer(props: LeafletMapContainerProps) {
   const mapTargetElementRef = useRef<HTMLDivElement>(null);
 

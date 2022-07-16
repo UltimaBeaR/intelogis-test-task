@@ -2,13 +2,16 @@ import L from 'leaflet';
 
 import type { MarkerColor } from './Map';
 
-export function createMap(
+export default function createMap(
   targetElement: HTMLDivElement,
   initialLocation: L.LatLng,
   initialZoom: number,
   startWaypointMarkerColor: MarkerColor,
   endWaypointMarkerColor: MarkerColor,
   intermediateWaypointMarkerColor: MarkerColor,
+  startWaypointMarkerText: string,
+  endWaypointMarkerText: string,
+  intermediateWaypointMarkerText: string,
   graphhopperApiKey: string,
   startRountingCallback: () => void,
   endRoutingCallback: (isSuccess: boolean) => void
@@ -39,6 +42,9 @@ export function createMap(
     startWaypointMarkerColor,
     endWaypointMarkerColor,
     intermediateWaypointMarkerColor,
+    startWaypointMarkerText,
+    endWaypointMarkerText,
+    intermediateWaypointMarkerText,
     graphhopperApiKey,
     startRountingCallback,
     endRoutingCallback
@@ -89,6 +95,9 @@ function createRouting(
   startWaypointMarkerColor: MarkerColor,
   endWaypointMarkerColor: MarkerColor,
   intermediateWaypointMarkerColor: MarkerColor,
+  startWaypointMarkerText: string,
+  endWaypointMarkerText: string,
+  intermediateWaypointMarkerText: string,
   graphhopperApiKey: string,
   startRountingCallback: () => void,
   endRoutingCallback: (isSuccess: boolean) => void
@@ -109,14 +118,14 @@ function createRouting(
       const isLastWaypoint = i === n - 1;
 
       if (isFirstWaypoint) {
-        return createColoredMarker(wp.latLng, startWaypointMarkerColor, true);
+        return createColoredMarker(wp.latLng, startWaypointMarkerColor, true, startWaypointMarkerText);
       }
 
       if (isLastWaypoint) {
-        return createColoredMarker(wp.latLng, endWaypointMarkerColor, true);
+        return createColoredMarker(wp.latLng, endWaypointMarkerColor, true, endWaypointMarkerText);
       }
 
-      return createColoredMarker(wp.latLng, intermediateWaypointMarkerColor, true);
+      return createColoredMarker(wp.latLng, intermediateWaypointMarkerColor, true, intermediateWaypointMarkerText);
     }
   });
 
@@ -137,8 +146,8 @@ function createRouting(
   return routingControl;
 }
 
-function createColoredMarker(latLng: L.LatLng, color: MarkerColor, use2x: boolean) {
-  return L.marker(latLng, { icon: createColoredMarkerIcon(color, use2x) });
+function createColoredMarker(latLng: L.LatLng, color: MarkerColor, use2x?: boolean, title?: string) {
+  return L.marker(latLng, { icon: createColoredMarkerIcon(color, use2x ?? true), title: title });
 }
 
 function createColoredMarkerIcon(color: MarkerColor, use2x: boolean) {
