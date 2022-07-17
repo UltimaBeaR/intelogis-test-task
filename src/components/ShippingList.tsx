@@ -1,13 +1,22 @@
-import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import PassParentDimensions from 'components/utility/passParentDimensions/PassParentDimensions';
+import { shippingItems, ShippingItem } from 'initialData/shippingItems';
+import { locations } from 'initialData/locations';
+import { formatRuDate, formatRuMoney } from 'utils/format';
+
+interface ShippingTableLocation {
+  title: string,
+  latitude: number,
+  longitude: number,
+}
 
 interface ShippingTableItem {
   key: string,
   date: Date,
-  loadingLocation: string,
-  unloadingLocation: string,
+  loadingLocation: ShippingTableLocation,
+  unloadingLocation: ShippingTableLocation,
   weight: number,
   size: number,
   bodyType: string,
@@ -22,7 +31,7 @@ const columns: ColumnsType<ShippingTableItem> = [
     width: 120,
     dataIndex: 'date',
     render: (date: Date) => {
-      return <div>{moment(date).format('DD.MM.YYYY')}</div>
+      return <>{formatRuDate(date)}</>
     }
   },
   {
@@ -30,14 +39,20 @@ const columns: ColumnsType<ShippingTableItem> = [
     title: 'Погрузка',
     ellipsis: true,
     width: 120,
-    dataIndex: 'loadingLocation'
+    dataIndex: 'loadingLocation',
+    render: (location: ShippingTableLocation) => {
+      return <>{location.title}</>
+    }
   },
   {
     key: 'unloadingLocation',
     title: 'Разгрузка',
     ellipsis: true,
     width: 120,
-    dataIndex: 'unloadingLocation'
+    dataIndex: 'unloadingLocation',
+    render: (location: ShippingTableLocation) => {
+      return <>{location.title}</>
+    }
   },
   {
     key: 'weight',
@@ -65,184 +80,68 @@ const columns: ColumnsType<ShippingTableItem> = [
     title: 'Цена, руб.',
     ellipsis: true,
     width: 120,
-    dataIndex: 'price'
+    dataIndex: 'price',
+    render: (price: number) => {
+      return <>{formatRuMoney(price)}</>
+    }
   }
 ];
 
-const data: ShippingTableItem[] = [
-  {
-    key: '1',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '2',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '3',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '4',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '5',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '6',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '7',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '8',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '9',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '10',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '11',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '12',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '13',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '14',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '15',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '16',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-  {
-    key: '17',
-    date: new Date(Date.parse('2022-07-19')),
-    loadingLocation: 'Тверь',
-    unloadingLocation: 'Кимры',
-    weight: 4.6,
-    size: 30.0,
-    bodyType: 'Манипулятор',
-    price: 1
-  },
-];
+function locationIdToTableLocation(locationId: number): ShippingTableLocation | null {
+  const location = locations.find(x => x.id === locationId);
+
+  if (!location)
+    return null;
+
+  return {
+    title: location.name + ' - ' + location.region,
+    latitude: location.latitude,
+    longitude: location.longitude
+  };
+}
+
+function shippingItemToTable(shippingItem: ShippingItem): ShippingTableItem | null {
+  const { id: _1, loadingLocationId, unloadingLocationId, ...restOfItem } = shippingItem;
+
+  const loadingLocation = locationIdToTableLocation(loadingLocationId);
+  const unloadingLocation = locationIdToTableLocation(unloadingLocationId);
+
+  if (!loadingLocation || !unloadingLocation)
+    return null;
+
+  return {
+    key: String(shippingItem.id),
+    loadingLocation: loadingLocation,
+    unloadingLocation: unloadingLocation,
+
+    ...restOfItem
+  };
+}
 
 function ShippingList() {
+  const [data, setData] = useState<ShippingTableItem[]>([]);
+
+  useEffect(() => {
+    const shippingTableItems: ShippingTableItem[] = shippingItems
+      .map(shippingItemToTable)
+      .filter((x): x is ShippingTableItem => x !== null);
+
+    setData(shippingTableItems);
+  }, []);
+
+  useEffect(() => {
+    // TODO: селект 1ой строчки
+  }, [data]);
+
+  function onSelectedRowKeysChange(selectedRowKeys: React.Key[], selectedRows: ShippingTableItem[]) {
+    if (selectedRows.length === 0)
+      return;
+
+    const tableItem = selectedRows[0];
+
+    alert(`построить путь ${tableItem.loadingLocation.title} ${tableItem.loadingLocation.latitude}:${tableItem.loadingLocation.longitude} -> ${tableItem.unloadingLocation.title} ${tableItem.unloadingLocation.latitude}:${tableItem.unloadingLocation.longitude}`);
+  }
+
   return (
     <PassParentDimensions>
       {
@@ -259,6 +158,7 @@ function ShippingList() {
                 y: parentHeight - TABLE_HEADER_HEIGHT,
               }}
               rowSelection={{
+                onChange: onSelectedRowKeysChange,
                 type: "radio"
               }}
               pagination={false}
