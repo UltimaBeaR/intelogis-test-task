@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Location, ShippingItem } from './domainTypes';
+import { Location, ShippingItem } from 'store/domainTypes';
 
-interface ShippingsState {
+export interface ShippingsState {
   locations: Record<number, Location>;
   shippingItems: Record<number, ShippingItem>;
   selectedShippingItemId: number
@@ -13,7 +13,7 @@ const initialState: ShippingsState = {
   selectedShippingItemId: -1
 };
 
-export const slice = createSlice({
+export const shippingsSlice = createSlice({
   name: 'shippings',
   initialState,
 
@@ -36,10 +36,4 @@ export const slice = createSlice({
   }
 });
 
-export const {
-  addLocations,
-  addShippingItems,
-  setSelectedShippingItemId
-} = slice.actions;
-
-export default slice.reducer;
+export default shippingsSlice.reducer;

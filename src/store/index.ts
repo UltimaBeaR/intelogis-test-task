@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import shippingsReducer from './shippingsSlice';
+import shippingsReducer from './shippings/slice';
 
 export const store = configureStore({
   reducer: {
@@ -8,5 +8,5 @@ export const store = configureStore({
   }
 });
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import PassParentDimensions from 'components/utility/passParentDimensions/PassParentDimensions';
-import { shippingItems } from 'initialData/shippingItems';
-import type { ShippingItem } from 'store/domainTypes';
-import { locations } from 'initialData/locations';
 import { formatRuDate, formatRuMoney } from 'utils/format';
-import { useAppDispatch } from 'hooks/redux';
-import { setSelectedShippingItemId } from 'store/shippingsSlice';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { setSelectedShippingItemId } from 'store/shippings/actionCreators';
+import { getAllShippingItems, ShippingItemWithLocation } from 'store/shippings/selectors';
+import { Location } from 'store/domainTypes';
 
 interface ShippingTableLocation {
   title: string,
@@ -90,12 +89,7 @@ const columns: ColumnsType<ShippingTableItem> = [
   }
 ];
 
-function locationIdToTableLocation(locationId: number): ShippingTableLocation | null {
-  const location = locations.find(x => x.id === locationId);
-
-  if (!location)
-    return null;
-
+function locationToTableLocation(location: Location): ShippingTableLocation {
   return {
     title: location.name + ' - ' + location.region,
     latitude: location.latitude,
@@ -103,19 +97,13 @@ function locationIdToTableLocation(locationId: number): ShippingTableLocation | 
   };
 }
 
-function shippingItemToTable(shippingItem: ShippingItem): ShippingTableItem | null {
-  const { id: _1, loadingLocationId, unloadingLocationId, dateTimestamp, ...restOfItem } = shippingItem;
-
-  const loadingLocation = locationIdToTableLocation(loadingLocationId);
-  const unloadingLocation = locationIdToTableLocation(unloadingLocationId);
-
-  if (!loadingLocation || !unloadingLocation)
-    return null;
+function shippingItemToTable(shippingItem: ShippingItemWithLocation): ShippingTableItem {
+  const { id: _1, loadingLocation, unloadingLocation, dateTimestamp, ...restOfItem } = shippingItem;
 
   return {
     key: String(shippingItem.id),
-    loadingLocation: loadingLocation,
-    unloadingLocation: unloadingLocation,
+    loadingLocation: locationToTableLocation(loadingLocation),
+    unloadingLocation: locationToTableLocation(unloadingLocation),
     date: new Date(dateTimestamp),
 
     ...restOfItem
@@ -125,19 +113,14 @@ function shippingItemToTable(shippingItem: ShippingItem): ShippingTableItem | nu
 function ShippingList() {
   const [data, setData] = useState<ShippingTableItem[]>([]);
 
-  useEffect(() => {
-    // TODO: заюзать селектор тут и получать данные из стора
+  const shippingItems = useAppSelector(getAllShippingItems);
 
+  useEffect(() => {
     const shippingTableItems: ShippingTableItem[] = shippingItems
-      .map(shippingItemToTable)
-      .filter((x): x is ShippingTableItem => x !== null);
+      .map(shippingItemToTable);
 
     setData(shippingTableItems);
-  }, []);
-
-  useEffect(() => {
-    // TODO: селект 1ой строчки
-  }, [data]);
+  }, [shippingItems]);
   
   const dispatch = useAppDispatch();
 

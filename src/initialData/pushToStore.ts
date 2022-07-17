@@ -1,5 +1,5 @@
 import { store } from "store";
-import { addLocations, addShippingItems } from 'store/shippingsSlice';
+import { addLocations, addShippingItems } from 'store/shippings/actionCreators';
 import { locations } from './locations';
 import { shippingItems } from './shippingItems';
 
