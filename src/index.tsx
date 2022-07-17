@@ -1,17 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider as ReduxProvider } from 'react-redux';
+import { store } from 'store';
+import { pushInitialDataToStore } from 'initialData/pushToStore';
 import App from 'components/App';
 
-import 'reset.scss'
-import 'vendorImports';
-import 'vendorOverrides.scss';
-import 'vendorConfig';
-import 'main.scss';
-import 'react-split.scss';
+import 'initialImports';
+
+pushInitialDataToStore();
 
 const rootElement = (
   <React.StrictMode>
-    <App />
+    <ReduxProvider store={store}>
+      <App />
+    </ReduxProvider>
   </React.StrictMode>
 );
 

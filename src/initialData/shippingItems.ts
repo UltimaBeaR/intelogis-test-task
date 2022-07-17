@@ -1,18 +1,9 @@
-export interface ShippingItem {
-  id: number,
-  date: Date,
-  loadingLocationId: number,
-  unloadingLocationId: number,
-  weight: number,
-  size: number,
-  bodyType: string,
-  price: number,
-}
+import type { ShippingItem } from 'store/domainTypes';
 
 export const shippingItems: ShippingItem[] = [
   {
     id: 1,
-    date: new Date(Date.parse('2022-07-19')),
+    dateTimestamp: Date.parse('2022-07-19'),
     loadingLocationId: 1,
     unloadingLocationId: 2,
     weight: 4.6,
@@ -22,7 +13,7 @@ export const shippingItems: ShippingItem[] = [
   },
   {
     id: 2,
-    date: new Date(Date.parse('2022-07-19')),
+    dateTimestamp: Date.parse('2022-07-19'),
     loadingLocationId: 1,
     unloadingLocationId: 2,
     weight: 4.6,
@@ -32,7 +23,7 @@ export const shippingItems: ShippingItem[] = [
   },
   {
     id: 3,
-    date: new Date(Date.parse('2022-07-19')),
+    dateTimestamp: Date.parse('2022-07-19'),
     loadingLocationId: 1,
     unloadingLocationId: 2,
     weight: 4.6,

@@ -1,14 +1,4 @@
-export type LocationType = 'city' | 'town' | 'village';
-
-export interface Location {
-  id: number,
-  name: string,
-  type: LocationType,
-  latitude: number,
-  longitude: number,
-  region: string,
-  country: string
-}
+import type { Location } from 'store/domainTypes';
 
 export const locations: Location[] = [
   {

@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import PassParentDimensions from 'components/utility/passParentDimensions/PassParentDimensions';
-import { shippingItems, ShippingItem } from 'initialData/shippingItems';
+import { shippingItems } from 'initialData/shippingItems';
+import type { ShippingItem } from 'store/domainTypes';
 import { locations } from 'initialData/locations';
 import { formatRuDate, formatRuMoney } from 'utils/format';
+import { useAppDispatch } from 'hooks/redux';
+import { setSelectedShippingItemId } from 'store/shippingsSlice';
 
 interface ShippingTableLocation {
   title: string,
@@ -101,7 +104,7 @@ function locationIdToTableLocation(locationId: number): ShippingTableLocation | 
 }
 
 function shippingItemToTable(shippingItem: ShippingItem): ShippingTableItem | null {
-  const { id: _1, loadingLocationId, unloadingLocationId, ...restOfItem } = shippingItem;
+  const { id: _1, loadingLocationId, unloadingLocationId, dateTimestamp, ...restOfItem } = shippingItem;
 
   const loadingLocation = locationIdToTableLocation(loadingLocationId);
   const unloadingLocation = locationIdToTableLocation(unloadingLocationId);
@@ -113,6 +116,7 @@ function shippingItemToTable(shippingItem: ShippingItem): ShippingTableItem | nu
     key: String(shippingItem.id),
     loadingLocation: loadingLocation,
     unloadingLocation: unloadingLocation,
+    date: new Date(dateTimestamp),
 
     ...restOfItem
   };
@@ -122,6 +126,8 @@ function ShippingList() {
   const [data, setData] = useState<ShippingTableItem[]>([]);
 
   useEffect(() => {
+    // TODO: заюзать селектор тут и получать данные из стора
+
     const shippingTableItems: ShippingTableItem[] = shippingItems
       .map(shippingItemToTable)
       .filter((x): x is ShippingTableItem => x !== null);
@@ -132,6 +138,8 @@ function ShippingList() {
   useEffect(() => {
     // TODO: селект 1ой строчки
   }, [data]);
+  
+  const dispatch = useAppDispatch();
 
   function onSelectedRowKeysChange(selectedRowKeys: React.Key[], selectedRows: ShippingTableItem[]) {
     if (selectedRows.length === 0)
@@ -139,7 +147,8 @@ function ShippingList() {
 
     const tableItem = selectedRows[0];
 
-    alert(`построить путь ${tableItem.loadingLocation.title} ${tableItem.loadingLocation.latitude}:${tableItem.loadingLocation.longitude} -> ${tableItem.unloadingLocation.title} ${tableItem.unloadingLocation.latitude}:${tableItem.unloadingLocation.longitude}`);
+    dispatch(setSelectedShippingItemId(parseInt(tableItem.key)));
+    //alert(`построить путь ${tableItem.loadingLocation.title} ${tableItem.loadingLocation.latitude}:${tableItem.loadingLocation.longitude} -> ${tableItem.unloadingLocation.title} ${tableItem.unloadingLocation.latitude}:${tableItem.unloadingLocation.longitude}`);
   }
 
   return (
