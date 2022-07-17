@@ -10,7 +10,7 @@ export interface Location {
   country: string
 }
 
-export type ShippingItemBodyType = 'Манипулятор';
+export type ShippingItemBodyType = 'Манипулятор' | 'Рефрижератор' | 'Тентованный' | 'Изотермический';
 
 export interface ShippingItem {
   id: number,

@@ -4,7 +4,7 @@ import { ColumnsType } from 'antd/lib/table';
 import PassParentDimensions from 'components/utility/passParentDimensions/PassParentDimensions';
 import { formatRuDate, formatRuMoney } from 'utils/format';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { setSelectedShippingItemId } from 'store/shippings/actionCreators';
+import { selectShippingItem } from 'store/shippings/actionCreators';
 import { getAllShippingItems, ShippingItemWithLocation } from 'store/shippings/selectors';
 import { Location } from 'store/domainTypes';
 
@@ -61,14 +61,20 @@ const columns: ColumnsType<ShippingTableItem> = [
     title: 'Вес, т',
     ellipsis: true,
     width: 120,
-    dataIndex: 'weight'
+    dataIndex: 'weight',
+    render: (weight: number) => {
+      return <>{weight.toFixed(1)}</>
+    }
   },
   {
     key: 'size',
     title: 'Объем, м3',
     ellipsis: true,
     width: 120,
-    dataIndex: 'size'
+    dataIndex: 'size',
+    render: (size: number) => {
+      return <>{size.toFixed(1)}</>
+    }
   },
   {
     key: 'bodyType',
@@ -130,7 +136,7 @@ function ShippingList() {
 
     const tableItem = selectedRows[0];
 
-    dispatch(setSelectedShippingItemId(parseInt(tableItem.key)));
+    dispatch(selectShippingItem(parseInt(tableItem.key)));
     //alert(`построить путь ${tableItem.loadingLocation.title} ${tableItem.loadingLocation.latitude}:${tableItem.loadingLocation.longitude} -> ${tableItem.unloadingLocation.title} ${tableItem.unloadingLocation.latitude}:${tableItem.unloadingLocation.longitude}`);
   }
 

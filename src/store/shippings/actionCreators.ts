@@ -1,7 +1,23 @@
+import { PayloadAction } from "@reduxjs/toolkit";
 import { shippingsSlice } from "./slice";
 
-export const {
+function selectShippingItem(shippingItemId: number): PayloadAction<number> {
+  return {
+    type: 'SELECT_SHIPPING_ITEM',
+    payload: shippingItemId
+  };
+}
+
+const {
   addLocations,
   addShippingItems,
   setSelectedShippingItemId
 } = shippingsSlice.actions;
+
+export {
+  selectShippingItem,
+
+  addLocations,
+  addShippingItems,
+  setSelectedShippingItemId
+};

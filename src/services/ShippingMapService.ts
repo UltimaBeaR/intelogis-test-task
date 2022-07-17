@@ -10,10 +10,14 @@ export default class ShippingMapService {
     this._handle = handle;
   }
 
-  async setWaypoints(waypoints: MapPosition[]) {
-    if (!this._handle)
+  isReady(): boolean {
+    return this._handle !== null;
+  }
+
+  setWaypoints = async (waypoints: MapPosition[]) => {
+    if (this._handle === null)
       return;
 
     return this._handle.setWaypoints(waypoints);
-  }
+  };
 }

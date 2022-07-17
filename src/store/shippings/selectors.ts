@@ -45,3 +45,14 @@ export function getAllShippingItems(state: RootState): ShippingItemWithLocation[
     .map(shippingItem => shippingItemToShippingItemWithLocation(shippingItem, shippingsState))
     .filter((x): x is ShippingItemWithLocation => x !== null);
 }
+
+export function getShippingItem(state: RootState, id: number): ShippingItemWithLocation | null {
+  const shippingsState = state.shippings;
+
+  const shippingItem = shippingsState.shippingItems[id];
+
+  if (shippingItem === undefined)
+    return null;
+
+  return shippingItemToShippingItemWithLocation(shippingItem, shippingsState);
+}
