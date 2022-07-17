@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Location, ShippingItem } from 'store/domainTypes';
+import { SetShippingItemLocationPayload } from './actions';
 
 export interface ShippingsState {
   locations: Record<number, Location>;
@@ -32,7 +33,16 @@ export const shippingsSlice = createSlice({
 
     setSelectedShippingItemId(state, action: PayloadAction<number>) {
       state.selectedShippingItemId = action.payload;
-    }
+    },
+
+    setShippingItemLocation(state, action: PayloadAction<SetShippingItemLocationPayload>) {
+      const shippingItem = state.shippingItems[action.payload.shippingItemId];
+
+      if (action.payload.isLoadingLocation)
+        shippingItem.loadingLocationId = action.payload.locationId;
+      else
+        shippingItem.unloadingLocationId = action.payload.locationId;
+    },
   }
 });
 

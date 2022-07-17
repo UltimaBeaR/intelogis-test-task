@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import PassParentDimensions from 'components/utility/passParentDimensions/PassParentDimensions';
 import { formatRuDate, formatRuMoney } from 'utils/format';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { selectShippingItem } from 'store/shippings/actionCreators';
-import { getAllShippingItems, ShippingItemWithLocation } from 'store/shippings/selectors';
+import { selectShippingItem, changeLocation } from 'store/shippings/actionCreators';
+import { getAllShippingItems, getAllLocations, ShippingItemWithLocation } from 'store/shippings/selectors';
 import { Location } from 'store/domainTypes';
+import LocationSelect from './LocationSelect';
 
-interface ShippingTableLocation {
-  title: string,
-  latitude: number,
-  longitude: number,
+export interface ShippingTableLocation {
+  id: number,
+  title: string
 }
 
-interface ShippingTableItem {
+export interface ShippingTableItem {
   key: string,
   date: Date,
   loadingLocation: ShippingTableLocation,
@@ -25,81 +25,10 @@ interface ShippingTableItem {
   price: number,
 }
 
-const columns: ColumnsType<ShippingTableItem> = [
-  {
-    key: 'date',
-    title: 'Дата погрузки',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'date',
-    render: (date: Date) => {
-      return <>{formatRuDate(date)}</>
-    }
-  },
-  {
-    key: 'loadingLocation',
-    title: 'Погрузка',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'loadingLocation',
-    render: (location: ShippingTableLocation) => {
-      return <>{location.title}</>
-    }
-  },
-  {
-    key: 'unloadingLocation',
-    title: 'Разгрузка',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'unloadingLocation',
-    render: (location: ShippingTableLocation) => {
-      return <>{location.title}</>
-    }
-  },
-  {
-    key: 'weight',
-    title: 'Вес, т',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'weight',
-    render: (weight: number) => {
-      return <>{weight.toFixed(1)}</>
-    }
-  },
-  {
-    key: 'size',
-    title: 'Объем, м3',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'size',
-    render: (size: number) => {
-      return <>{size.toFixed(1)}</>
-    }
-  },
-  {
-    key: 'bodyType',
-    title: 'Тип кузова',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'bodyType'
-  },
-  {
-    key: 'price',
-    title: 'Цена, руб.',
-    ellipsis: true,
-    width: 120,
-    dataIndex: 'price',
-    render: (price: number) => {
-      return <>{formatRuMoney(price)}</>
-    }
-  }
-];
-
 function locationToTableLocation(location: Location): ShippingTableLocation {
   return {
-    title: location.name + ' - ' + location.region,
-    latitude: location.latitude,
-    longitude: location.longitude
+    id: location.id,
+    title: location.name + ' - ' + location.region
   };
 }
 
@@ -120,6 +49,13 @@ function ShippingList() {
   const [data, setData] = useState<ShippingTableItem[]>([]);
 
   const shippingItems = useAppSelector(getAllShippingItems);
+  const locations = useAppSelector(getAllLocations);
+
+  const [selectedRowKey, setSelectedRowKey] = useState('');
+
+  const tableLocations = useMemo(() => {
+    return locations.map(locationToTableLocation);
+  }, [locations]);
 
   useEffect(() => {
     const shippingTableItems: ShippingTableItem[] = shippingItems
@@ -130,15 +66,96 @@ function ShippingList() {
   
   const dispatch = useAppDispatch();
 
-  function onSelectedRowKeysChange(selectedRowKeys: React.Key[], selectedRows: ShippingTableItem[]) {
+  function handleSelectedRowKeysChange(selectedRowKeys: React.Key[], selectedRows: ShippingTableItem[]) {
     if (selectedRows.length === 0)
       return;
 
     const tableItem = selectedRows[0];
 
     dispatch(selectShippingItem(parseInt(tableItem.key)));
-    //alert(`построить путь ${tableItem.loadingLocation.title} ${tableItem.loadingLocation.latitude}:${tableItem.loadingLocation.longitude} -> ${tableItem.unloadingLocation.title} ${tableItem.unloadingLocation.latitude}:${tableItem.unloadingLocation.longitude}`);
+
+    setSelectedRowKey(tableItem.key);
   }
+
+  function handleLocationChange(rowKey: string, location: ShippingTableLocation, isLoadingLocation: boolean) {
+    dispatch(changeLocation(parseInt(rowKey), location.id, isLoadingLocation));
+  }
+
+  const columns: ColumnsType<ShippingTableItem> = [
+    {
+      key: 'date',
+      title: 'Дата погрузки',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'date',
+      render: (date: Date) => {
+        return <>{formatRuDate(date)}</>
+      }
+    },
+    {
+      key: 'loadingLocation',
+      title: 'Погрузка',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'loadingLocation',
+      render: (location: ShippingTableLocation, row: ShippingTableItem) => {
+        if (selectedRowKey === row.key)
+          return <LocationSelect selectedLocation={location} allLocations={tableLocations} onChange={(location) => handleLocationChange(row.key, location, true)} />;
+        else
+          return <>{location.title}</>;
+      }
+    },
+    {
+      key: 'unloadingLocation',
+      title: 'Разгрузка',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'unloadingLocation',
+      render: (location: ShippingTableLocation, row: ShippingTableItem) => {
+        if (selectedRowKey === row.key)
+          return <LocationSelect selectedLocation={location} allLocations={tableLocations} onChange={(location) => handleLocationChange(row.key, location, false)} />;
+        else
+          return <>{location.title}</>;
+      }
+    },
+    {
+      key: 'weight',
+      title: 'Вес, т',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'weight',
+      render: (weight: number) => {
+        return <>{weight.toFixed(1)}</>
+      }
+    },
+    {
+      key: 'size',
+      title: 'Объем, м3',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'size',
+      render: (size: number) => {
+        return <>{size.toFixed(1)}</>
+      }
+    },
+    {
+      key: 'bodyType',
+      title: 'Тип кузова',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'bodyType'
+    },
+    {
+      key: 'price',
+      title: 'Цена, руб.',
+      ellipsis: true,
+      width: 120,
+      dataIndex: 'price',
+      render: (price: number) => {
+        return <>{formatRuMoney(price)}</>
+      }
+    }
+  ];
 
   return (
     <PassParentDimensions>
@@ -156,7 +173,7 @@ function ShippingList() {
                 y: parentHeight - TABLE_HEADER_HEIGHT,
               }}
               rowSelection={{
-                onChange: onSelectedRowKeysChange,
+                onChange: handleSelectedRowKeysChange,
                 type: "radio"
               }}
               pagination={false}

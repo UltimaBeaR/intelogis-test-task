@@ -56,3 +56,15 @@ export function getShippingItem(state: RootState, id: number): ShippingItemWithL
 
   return shippingItemToShippingItemWithLocation(shippingItem, shippingsState);
 }
+
+export function getAllLocations(state: RootState): Location[] {
+  const shippingsState = state.shippings;
+
+  return Object.values(shippingsState.locations);
+}
+
+export function getSelectedShippingItemId(state: RootState): number {
+  const shippingsState = state.shippings;
+
+  return shippingsState.selectedShippingItemId;
+}
