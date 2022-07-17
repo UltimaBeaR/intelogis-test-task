@@ -1,5 +1,5 @@
 import L from 'leaflet';
-
+import { appConfig } from 'appConfig';
 import type { MarkerColor } from './Map';
 
 export default function createMap(
@@ -152,8 +152,8 @@ function createColoredMarker(latLng: L.LatLng, color: MarkerColor, use2x?: boole
 
 function createColoredMarkerIcon(color: MarkerColor, use2x: boolean) {
   return L.icon({
-    iconUrl: `/leaflet-markers/marker-icon${use2x ? '-2x' : ''}-${color}.png`,
-    shadowUrl: '/leaflet-markers/marker-shadow.png',
+    iconUrl: `${appConfig.publicUrl}/leaflet-markers/marker-icon${use2x ? '-2x' : ''}-${color}.png`,
+    shadowUrl: `${appConfig.publicUrl}/leaflet-markers/marker-shadow.png`,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],

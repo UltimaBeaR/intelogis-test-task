@@ -1,7 +1,7 @@
 {
   "name": "intelogis-test-task",
   "version": "0.1.0",
-  "homepage": "https://ultimabear.github.io/intelogis-test-task",
+  "homepage": "https://ultimabear.github.io/intelogis-test-task/",
   "private": true,
   "scripts": {
     "predeploy": "npm run build",
